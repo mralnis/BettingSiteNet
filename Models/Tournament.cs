@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,5 +20,10 @@ namespace BettingSiteNet.Models
         public int PointsForWinnerOnly { get; set; }
 
         public Country Country { get; set; }
+        public List<Matchup>  Matchups { get; set; }
+
+        [NotMapped]
+        public bool HasUserJoinedTournament { get; set; }
+
     }
 }

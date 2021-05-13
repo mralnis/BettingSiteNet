@@ -65,8 +65,7 @@ namespace BettingSiteNet.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Name")]
         public string Email { get; set; }
 
         [Required]

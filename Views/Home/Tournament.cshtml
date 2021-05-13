@@ -1,0 +1,33 @@
+﻿@model BettingSiteNet.Controllers.ViewModels.TournamentMain
+
+@{
+    ViewBag.Title = Model.Tournament.Name;
+}
+
+<h2>@Model.Tournament.Name</h2>
+
+<div>
+
+    <table>
+        <tr>
+            <th></th>
+            @Html.EditorFor(model => model.Tournament.Matchups)
+
+        </tr>
+        @foreach (var player in Model.PlayerPredictions)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => player.Name)</td>
+                @foreach (var prediction in player.Predictions)
+                {
+                    <td>
+                        @prediction.HomeTeamScore : @prediction.EnemyTeamScore
+                    </td>
+                }
+            </tr>
+        }
+
+
+    </table>
+
+</div>

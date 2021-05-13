@@ -168,6 +168,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -175,12 +176,18 @@
     <Compile Include="Controllers\PlayerTournamentsController.cs" />
     <Compile Include="Controllers\PredictionsController.cs" />
     <Compile Include="Controllers\TournamentsController.cs" />
+    <Compile Include="Controllers\ViewModels\PlayerPredictions.cs" />
+    <Compile Include="Controllers\ViewModels\TournamentMain.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202105131303376_Initia.cs" />
     <Compile Include="Migrations\202105131303376_Initia.Designer.cs">
       <DependentUpon>202105131303376_Initia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105131525125_AddedMatchupsTorunamentLink.cs" />
+    <Compile Include="Migrations\202105131525125_AddedMatchupsTorunamentLink.Designer.cs">
+      <DependentUpon>202105131525125_AddedMatchupsTorunamentLink.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -231,7 +238,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Tournament.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -279,7 +286,8 @@
     <Content Include="Views\Tournaments\Edit.cshtml" />
     <Content Include="Views\Tournaments\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Shared\Widgets\Matchup.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Matchup.cshtml" />
+    <Content Include="Views\Home\Matchup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -300,6 +308,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202105131303376_Initia.resx">
       <DependentUpon>202105131303376_Initia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105131525125_AddedMatchupsTorunamentLink.resx">
+      <DependentUpon>202105131525125_AddedMatchupsTorunamentLink.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
