@@ -1,0 +1,64 @@
+﻿@model BettingSiteNet.Models.Matchup
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Matchup</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tournament.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tournament.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GameTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GameTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HomeTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomeTeamScore)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnemyTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnemyTeamScore)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

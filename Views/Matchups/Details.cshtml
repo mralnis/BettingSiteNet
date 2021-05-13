@@ -1,0 +1,58 @@
+﻿@model BettingSiteNet.Models.Matchup
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Matchup</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tournament.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tournament.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GameTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GameTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HomeTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomeTeamScore)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnemyTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnemyTeamScore)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,90 @@
+﻿@model BettingSiteNet.Models.Tournament
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tournament</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MatchupClosingTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MatchupClosingTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TieAllowed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TieAllowed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PointsForPerfect)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PointsForPerfect)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PointForDifference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PointForDifference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PointsForWinnerOnly)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PointsForWinnerOnly)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

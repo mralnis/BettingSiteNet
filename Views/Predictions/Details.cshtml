@@ -1,0 +1,50 @@
+﻿@model BettingSiteNet.Models.Prediction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Prediction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Matchup.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Matchup.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AspNetUserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AspNetUserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HomeTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomeTeamScore)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnemyTeamScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnemyTeamScore)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
