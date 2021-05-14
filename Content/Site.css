@@ -22,3 +22,48 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.small-field {
+    max-width: 96px;
+}
+
+
+
+table td {
+    border: 1px solid #000;
+}
+
+.no-close .ui-dialog-titlebar {
+    display: none;
+}
+.ui-widget-content {
+    border: 1px solid #aaaaaa;
+    background: #aaaaaa;
+}
+button {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-right:10px;
+    min-width:80px
+}

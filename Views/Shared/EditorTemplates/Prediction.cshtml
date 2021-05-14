@@ -1,24 +1,28 @@
 ﻿@model BettingSiteNet.Models.Prediction
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <td>
-        <table>
-            <tr>
-                <td>
-                    @Html.EditorFor(model => model.HomeTeamScore, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.HomeTeamScore, "", new { @class = "text-danger" })
+<td>
+    <table width="197px" height="50px" class="text-center">
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.HomeTeamScore, new { htmlAttributes = new { @class = "form-control" } })
 
-                </td>
-                <td>
-                    @Html.EditorFor(model => model.EnemyTeamScore, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.HomeTeamScore, "", new { @class = "text-danger" })
-                </td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayFor(model => model.PointsEarned)</td>
-            </tr>
-        </table>
-    </td>
-}
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.EnemyTeamScore, new { htmlAttributes = new { @class = "form-control" } })
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                @if (Model.PointsEarned.HasValue)
+                {
+                    @Html.DisplayTextFor(model => model.PointsEarned)
+                }
+                else
+                {
+                   <span>-</span>
+                }
+            </td>
+        </tr>
+    </table>
+</td>

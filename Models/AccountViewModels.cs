@@ -49,8 +49,7 @@ namespace BettingSiteNet.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
+        [Display(Name = "Name")]
         public string Email { get; set; }
 
         [Required]

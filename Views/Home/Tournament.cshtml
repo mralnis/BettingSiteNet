@@ -17,16 +17,11 @@
         @foreach (var player in Model.PlayerPredictions)
         {
             <tr>
-                <td>@Html.DisplayFor(model => player.Name)</td>
                 <td>
-                    @Html.EditorFor(model => player.Predictions)
+                    @Html.DisplayFor(model => player.Name)
                 </td>
-                @foreach (var prediction in player.Predictions)
-                {
-                    <td>
-                        @prediction.HomeTeamScore : @prediction.EnemyTeamScore
-                    </td>
-                }
+
+                @Html.EditorFor(model => player.Predictions)
             </tr>
         }
 
@@ -34,3 +29,72 @@
     </table>
 
 </div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="dialog-form" class="form-inline form-group ui-widget-content">
+        <form>
+            <input type="text" id="homeTeamScore" class="form-control small-field">
+            <input type="text" id="enemyTeamScore" class="form-control small-field">
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px" />
+        </form>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        $(".btn-default").on("click", function () {
+            var id = $(this).attr('id');
+            openDialog(id);
+        });
+        var dialog, form,
+            homeTeamScore = $("#homeTeamScore"),
+            enemyTeamScore = $("#enemyTeamScore"),
+            matchupId = 0;
+
+        dialog = $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 80,
+            width: 200,
+            modal: true,
+            dialogClass: "no-close",
+            buttons: {
+                "Apstiprināt": savePrediction,
+                "Atcelt": function () {
+                    dialog.dialog("close");
+                }
+            },
+            close: function () {
+                dialog.dialog("close");
+            }
+        });
+        form = dialog.find("form").on("submit", function (event) {
+            event.preventDefault();
+            savePrediction();
+        });
+
+        function savePrediction() {
+
+            console.log("home team:" + homeTeamScore.val() + " enemy team:" + enemyTeamScore.val() + " matchup:" + matchupId);
+            dialog.dialog("close");
+        }
+        function openDialog(matchupId) {
+            var isOpen = dialog.dialog("isOpen");
+            if (isOpen) {
+                dialog.dialog("close");
+            }
+            if (!isOpen || this.matchupId != matchupId) {
+                dialog.dialog("option", "position", {
+                    my: "left top", at: "left bottom", of: $("#" + matchupId)
+                })
+                dialog.dialog("open");
+            }
+            this.matchupId = matchupId;
+
+        }
+    </script>
+}
