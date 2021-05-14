@@ -18,6 +18,9 @@
         {
             <tr>
                 <td>@Html.DisplayFor(model => player.Name)</td>
+                <td>
+                    @Html.EditorFor(model => player.Predictions)
+                </td>
                 @foreach (var prediction in player.Predictions)
                 {
                     <td>
