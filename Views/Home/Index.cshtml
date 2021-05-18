@@ -73,7 +73,7 @@
         }
     </table>
 </div>
-<div id="dialog-form" class="form-inline form-group ui-widget-content" style="display:table">
+<div id="dialog-form" style="display:table;max-width:170px">
 
     @using (Html.BeginForm())
     {
@@ -101,7 +101,7 @@
         dialog = $("#dialog-form").dialog({
             autoOpen: false,
             height: 80,
-            width: 200,
+            width: 170,
             modal: true,
             dialogClass: "no-close",
             buttons: {

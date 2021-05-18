@@ -67,8 +67,8 @@ button {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    margin-right:10px;
-    min-width:80px
+    margin-right:6px;
+    min-width:30px
 }
 
 .bigTable tr:nth-child(5) td {
