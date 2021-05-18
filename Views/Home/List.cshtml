@@ -1,0 +1,36 @@
+﻿@model IEnumerable<BettingSiteNet.Models.Tournament>
+
+@{
+    ViewBag.Title = "Tournaments";
+}
+
+<h2>Notikumu saraksts</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (item.HasUserJoinedTournament)
+                {
+                    @Html.ActionLink("Apskatīt", "Index", new { id = item.Id })
+
+                }
+                else
+                {
+                    @Html.ActionLink("Pievienoties", "Index", new { id = item.Id })
+                }
+            </td>
+        </tr>
+    }
+
+</table>

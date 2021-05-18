@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace BettingSiteNet.Controllers
 {
-    public class AdminController : Controller
+    public class Admin99Controller : Controller
     {
         // GET: Admin
         public ActionResult Index()

@@ -1,36 +1,170 @@
-﻿@model IEnumerable<BettingSiteNet.Models.Tournament>
+﻿@model BettingSiteNet.Controllers.ViewModels.TournamentMain
 
 @{
-    ViewBag.Title = "Tournaments";
+    ViewBag.Title = Model.Tournament.Name;
 }
 
-<h2>Tournaments</h2>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<h2>@Model.Tournament.Name</h2>
+<button type="button" class="collapsible">Informācija</button>
+<div class="content">
+    <p></p>
+    <p>Punkti par precīzu minējumu: <b>@Model.Tournament.PointsForPerfect</b> </p>
+    <p>Punkti par pareizu vārtu starpību+uzvarētāju: <b>@Model.Tournament.PointForDifference</b></p>
+    <p>Punkti tikai par pareizo uzvarētāju: <b>@Model.Tournament.PointsForWinnerOnly</b></p>
+    <ul>
+        <li>Minējumus var mainīt līdz spēles sākumam, daudz neatliekam, sistēma ir automātiska, un nevienu nežēlo</li>
+        <li>Citu dalībnieku minējumus varēs redzēt tikai tad, kad tos vairs jau mainīt  nevarēs. Špikošana šogad izslēgta</li>
+        <li>Neižšķirtu rezultātu nav, kāda no komandām ar +1 uzvar jebkurā gadījumā</li>
+        <li>Uzvaras laurus un naudas katlu savāc viens cilvēks, ja ir vienādi rezultāti, tad dalam brālīgi.</li>
+        <li>Dalības maksa <b>10 EUR</b>. Naudu sūtam uz vienu no kontiem</li>
+    </ul>
+    <table>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
+            <td width="120px">
+                Edgars Preimanis
             </td>
             <td>
-                @if (item.HasUserJoinedTournament)
-                {
-                    @Html.ActionLink("View", "Tournament", new { id = item.Id, isInTournament = true })
-
-                }
-                else
-                {
-                    @Html.ActionLink("Join", "Tournament", new { id = item.Id, isInTournament = false })
-                }
+                LV96RIKO0001301708307
+            </td>
+            <td>
+                (Luminor)
             </td>
         </tr>
-    }
+        <tr>
+            <td>
+                Didzis Stivriņš
+            </td>
+            <td>
+                LV21HABA0551039169500
+            </td>
+            <td>
+                (Swedbank)
+            </td>
+        </tr>
+    </table>
+    <p></p>
+</div>
+<hr />
+<div>
+    <table class="bigTable">
+        <tr>
+            <th></th>
+            @Html.EditorFor(model => model.Tournament.Matchups)
+            <th style="vertical-align:bottom">Punkti</th>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+        </tr>
+        @foreach (var player in Model.PlayerPredictions)
+        {
+            <tr>
+                <td style="padding-left:4px">
+                    @Html.DisplayFor(model => player.Name)
+                </td>
 
-</table>
+                @Html.EditorFor(model => player.Predictions)
+            <td class="text-center" style="border:2px solid black">
+                @Html.DisplayFor(model => player.Total)
+            </td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="dialog-form" class="form-inline form-group ui-widget-content" style="display:table">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <input type="number" id="homeTeamScore" name="HomeTeamScore" class="form-control small-field">
+        <input type="number" id="enemyTeamScore" name="EnemyTeamScore" class="form-control small-field">
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px" />
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        $(".btn-default").on("click", function () {
+            var id = $(this).attr('id');
+            openDialog(id);
+        });
+        var dialog, form,
+            homeTeamScore = $("#homeTeamScore"),
+            enemyTeamScore = $("#enemyTeamScore"),
+            matchupId = 0;
+
+        dialog = $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 80,
+            width: 200,
+            modal: true,
+            dialogClass: "no-close",
+            buttons: {
+                "Apstiprināt": savePrediction,
+                "Atcelt": function () {
+                    dialog.dialog("close");
+                }
+            },
+            close: function () {
+                dialog.dialog("close");
+            }
+        });
+        form = dialog.find("form").on("submit", function (event) {
+            event.preventDefault();
+            savePrediction();
+        });
+
+        function savePrediction() {
+
+            var data = $('#dialog-form').children('form').serialize() + "&MatchupId=" + matchupId;
+            $.ajax({
+                async: true,
+                data: data,
+                type: "POST",
+                url: "/Home/SavePrediction",
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert("somthing went horribly wrong. Contact Edgars :)");
+                }
+            });
+            console.log("home team:" + homeTeamScore.val() + " enemy team:" + enemyTeamScore.val() + " matchup:" + matchupId);
+            dialog.dialog("close");
+        }
+        function openDialog(matchupId) {
+            var isOpen = dialog.dialog("isOpen");
+            if (isOpen) {
+                dialog.dialog("close");
+            }
+            if (!isOpen || this.matchupId != matchupId) {
+                dialog.dialog("option", "position", {
+                    my: "left top", at: "left bottom", of: $("#" + matchupId)
+                })
+                dialog.dialog("open");
+            }
+            this.matchupId = matchupId;
+
+        }
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+}

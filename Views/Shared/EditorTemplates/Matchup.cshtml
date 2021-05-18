@@ -1,7 +1,22 @@
 ﻿@model BettingSiteNet.Models.Matchup
 
-<td>
-    <table width="100%" class="text-center">
+@{ 
+    var style = "";
+    if (@Model.HomeTeamScore.HasValue)
+    {
+        style = "background-color: rgba(104,235,109,0.6)";
+    }
+    else
+    {
+        if (!Model.CanVote)
+        {
+            style = "background-color: rgba(204,0,0,0.6)";
+        }
+    }
+}
+
+<th style="@style" width="170px">
+    <table width="100%" class="text-center"> 
         <tr>
             <td colspan="2">@Html.DisplayFor(model => model.Country.Name)</td>
         </tr>
@@ -20,11 +35,20 @@
             }
             else
             {
-                <td id="@Model.Id" class="btn btn-default table-bordered" colspan="2" width="100%" style="display:table-cell">
-                    Ievadīt
-                </td>
+                if (Model.CanVote)
+                {
+                    <td id="@Model.Id" class="btn btn-default table-bordered" colspan="2" width="100%" style="display:table-cell">
+                        Ievadīt minējumu
+                    </td>
+                }
+                else
+                {
+                    <td class="btn table-bordered" colspan="2" width="100%" style="display:table-cell">
+                        Gaida rezultātu
+                    </td>
+                }
             }
         </tr>
     </table>
-</td>
+</th>
 

@@ -48,7 +48,7 @@ namespace BettingSiteNet.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CountryId,StartDate,EndDate,MatchupClosingTime,Name,TieAllowed,PointsForPerfect,PointForDifference,PointsForWinnerOnly")] Tournament tournament)
+        public ActionResult Create([Bind(Include = "Id,CountryId,StartDate,EndDate,MatchupClosingTime,Name,IsActive,PointsForPerfect,PointForDifference,PointsForWinnerOnly")] Tournament tournament)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace BettingSiteNet.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CountryId,StartDate,EndDate,MatchupClosingTime,Name,TieAllowed,PointsForPerfect,PointForDifference,PointsForWinnerOnly")] Tournament tournament)
+        public ActionResult Edit([Bind(Include = "Id,CountryId,StartDate,EndDate,MatchupClosingTime,Name,IsActive,PointsForPerfect,PointForDifference,PointsForWinnerOnly")] Tournament tournament)
         {
             if (ModelState.IsValid)
             {

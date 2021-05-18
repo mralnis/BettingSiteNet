@@ -16,7 +16,7 @@ namespace BettingSiteNet.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Index()
+        public ActionResult List()
         {
             var userId = User.Identity.GetUserId();
             if (userId == null)
@@ -34,11 +34,16 @@ namespace BettingSiteNet.Controllers
             return View(tournaments);
         }
 
-        public ActionResult Tournament(int? id, bool? isInTournament)
+        public ActionResult Index(int? id)
         {
-            if (id == null || isInTournament == null)
+            var tournament = db.Tournaments.SingleOrDefault(x => x.IsActive);
+            if (tournament != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                id = tournament.Id;
+            }
+            if (id == null)
+            {
+                return RedirectToAction("List", "Home");
             }
             var userId = User.Identity.GetUserId();
             if (userId == null)
@@ -51,7 +56,8 @@ namespace BettingSiteNet.Controllers
             result.Tournament = db.Tournaments.Include(t => t.Country).Include(t => t.Matchups).Where(x => x.Id == id).First();
             result.Tournament.Matchups = result.Tournament.Matchups.OrderBy(x => x.GameTime).ToList();
 
-            if (!isInTournament.Value)
+            var isInTournament = db.PlayerTournaments.Any(x => x.TournamentId == id.Value && x.ApsnetUserId == userGuid);
+            if (!isInTournament)
             {
                 var playerTournament = new PlayerTournament()
                 {
@@ -70,16 +76,33 @@ namespace BettingSiteNet.Controllers
                 }
                 db.SaveChanges();
             }
-
-
-            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList();
+            
+            foreach (var matchup in result.Tournament.Matchups)
+            {
+                if (matchup.GameTime > DateTime.Now.AddMinutes(result.Tournament.MatchupClosingTime))
+                {
+                    matchup.CanVote = true;
+                }
+            }
+            var allCountries = db.Countries.ToList();
+            var cc = allCountries.Last();
+            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList().OrderByDescending(x=>x.ApsnetUserId == userGuid);
             result.PlayerPredictions = new List<PlayerPredictions>();
             foreach (var player in players)
             {
                 var playerPrediction = new PlayerPredictions();
                 playerPrediction.Name = db.Users.Find(player.ApsnetUserId.ToString()).UserName;
-                var predictions = db.Predictions.Include(t=>t.Matchup).Include(t=>t.Matchup.Country).Where(x => x.AspNetUserId == player.ApsnetUserId).OrderBy(x=>x.Matchup.GameTime).ToList();
+                var predictions = db.Predictions.Include(t => t.Matchup).Include(t => t.Matchup.Country).Where(x => x.AspNetUserId == player.ApsnetUserId).OrderBy(x => x.Matchup.GameTime).ToList();
                 playerPrediction.Predictions = predictions;
+                playerPrediction.Total = predictions.Sum(x=>x.PointsEarned ?? 0);
+                foreach (var prediction in predictions.Where(x=>x.AspNetUserId != userGuid))
+                {
+                    if (prediction.Matchup.GameTime > DateTime.Now.AddMinutes(result.Tournament.MatchupClosingTime))
+                    {
+                        prediction.EnemyTeamScore = null;
+                        prediction.HomeTeamScore = null;
+                    }
+                }
                 result.PlayerPredictions.Add(playerPrediction);
             }
 
@@ -91,6 +114,42 @@ namespace BettingSiteNet.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SavePrediction([Bind(Include = "MatchupId,HomeTeamScore,EnemyTeamScore")] Prediction prediction)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                if (userId == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var userGuid = new Guid(userId);
+
+                var existingPrediction = db.Predictions.Where(x => x.AspNetUserId == userGuid && x.MatchupId == prediction.MatchupId).FirstOrDefault();
+                if (existingPrediction == null)
+                {
+                    existingPrediction = new Prediction()
+                    {
+                        MatchupId = prediction.MatchupId,
+                        AspNetUserId = userGuid,
+                    };
+                    existingPrediction.HomeTeamScore = prediction.HomeTeamScore;
+                    existingPrediction.EnemyTeamScore = prediction.EnemyTeamScore;
+                    db.Predictions.Add(existingPrediction);
+                }
+                existingPrediction.HomeTeamScore = prediction.HomeTeamScore;
+                existingPrediction.EnemyTeamScore = prediction.EnemyTeamScore;
+
+                db.SaveChanges();
+            }
+            return new EmptyResult();
         }
     }
 }

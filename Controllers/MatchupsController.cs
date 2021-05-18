@@ -54,6 +54,16 @@ namespace BettingSiteNet.Controllers
             if (ModelState.IsValid)
             {
                 db.Matchups.Add(matchup);
+                var players = db.PlayerTournaments.Where(x => x.TournamentId == matchup.TournamentId).ToList();
+                foreach (var player in players)
+                {
+                    var prediction = new Prediction()
+                    {
+                        AspNetUserId = player.ApsnetUserId,
+                        MatchupId = matchup.Id,
+                    };
+                    db.Predictions.Add(prediction);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -90,12 +100,51 @@ namespace BettingSiteNet.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(matchup).State = EntityState.Modified;
+                if (matchup.HomeTeamScore != null)
+                {
+                    SetScore(matchup);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.CountryId = new SelectList(db.Countries, "Id", "Name", matchup.CountryId);
             ViewBag.TournamentId = new SelectList(db.Tournaments, "Id", "Name", matchup.TournamentId);
             return View(matchup);
+        }
+
+        private void SetScore(Matchup matchup)
+        {
+            var predictions = db.Predictions.Where(x => x.MatchupId == matchup.Id).ToList();
+            var tournament = db.Tournaments.Find(matchup.TournamentId);
+            foreach (var prediction in predictions)
+            {
+                if (prediction.HomeTeamScore == null)
+                {
+                    continue;
+                }
+                if (prediction.HomeTeamScore == matchup.HomeTeamScore && prediction.EnemyTeamScore == matchup.EnemyTeamScore)
+                {
+                    prediction.PointsEarned = tournament.PointsForPerfect;
+                }
+                else
+                {
+                    if (prediction.HomeTeamScore - prediction.EnemyTeamScore == matchup.HomeTeamScore - matchup.EnemyTeamScore)
+                    {
+                        prediction.PointsEarned = tournament.PointForDifference;
+                    }
+                    else
+                    {
+                        if (prediction.HomeTeamScore > prediction.EnemyTeamScore == matchup.HomeTeamScore > matchup.EnemyTeamScore)
+                        {
+                            prediction.PointsEarned = tournament.PointsForWinnerOnly;
+                        }
+                        else
+                        {
+                            prediction.PointsEarned = 0;
+                        }
+                    }
+                }
+            }
         }
 
         // GET: Matchups/Delete/5

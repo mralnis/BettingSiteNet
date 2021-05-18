@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "name": "BettingSiteNet20210514230724ResourceGroup",
+      "location": "westeurope",
+      "apiVersion": "2019-10-01"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat('BettingSiteNet20210514230724ResourceGroupDeployment', uniqueString(subscription().subscriptionId))]",
+      "resourceGroup": "BettingSiteNet20210514230724ResourceGroup",
+      "apiVersion": "2019-10-01",
+      "dependsOn": [
+        "BettingSiteNet20210514230724ResourceGroup"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "kind": "v12.0",
+              "location": "westeurope",
+              "name": "bettingsitenetdbserver",
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2017-10-01-preview"
+            },
+            {
+              "sku": {
+                "name": "Standard",
+                "tier": "Standard",
+                "capacity": 10
+              },
+              "kind": "v12.0,user",
+              "location": "westeurope",
+              "name": "bettingsitenetdbserver/BettingSiteNet_db",
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2017-10-01-preview",
+              "dependsOn": [
+                "bettingsitenetdbserver"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
