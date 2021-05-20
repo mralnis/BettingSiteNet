@@ -4,7 +4,7 @@
     ViewBag.Title = Model.Tournament.Name;
 }
 
-<h2>@Model.Tournament.Name</h2>
+<h2 class="main">@Model.Tournament.Name</h2>
 <button type="button" class="collapsible">Informācija</button>
 <div class="content">
     <p></p>
@@ -67,9 +67,9 @@
                 </td>
 
                 @Html.EditorFor(model => player.Predictions)
-            <td class="text-center" style="border:2px solid black">
-                @Html.DisplayFor(model => player.Total)
-            </td>
+                <td class="text-center" style="border:2px solid black">
+                    @Html.DisplayFor(model => player.Total)
+                </td>
             </tr>
         }
     </table>
@@ -89,6 +89,9 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("body").css("background-image", 'url(Content/hokeys.jpg)');
+        });
 
         $(".btn-default").on("click", function () {
             var id = $(this).attr('id');

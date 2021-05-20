@@ -98,7 +98,8 @@ button {
     background-color: #f1f1f1;
 }
 
-body {
-    background-image: url(hokeys.jpgg);
-}
 
+.main {
+    color: azure;
+    background-color: rgba(0,0,0,0.6);
+}
