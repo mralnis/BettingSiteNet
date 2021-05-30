@@ -79,14 +79,14 @@ namespace BettingSiteNet.Controllers
             
             foreach (var matchup in result.Tournament.Matchups)
             {
-                if (matchup.GameTime > DateTime.Now.AddMinutes(result.Tournament.MatchupClosingTime))
+                if (matchup.GameTime > DateTime.UtcNow.AddHours(3).AddMinutes(result.Tournament.MatchupClosingTime))
                 {
                     matchup.CanVote = true;
                 }
             }
             var allCountries = db.Countries.ToList();
             var cc = allCountries.Last();
-            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList().OrderByDescending(x=>x.ApsnetUserId == userGuid);
+            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList().OrderByDescending(x => x.ApsnetUserId == userGuid);
             result.PlayerPredictions = new List<PlayerPredictions>();
             foreach (var player in players)
             {
@@ -95,18 +95,36 @@ namespace BettingSiteNet.Controllers
                 var predictions = db.Predictions.Include(t => t.Matchup).Include(t => t.Matchup.Country).Where(x => x.AspNetUserId == player.ApsnetUserId).OrderBy(x => x.Matchup.GameTime).ToList();
                 playerPrediction.Predictions = predictions;
                 playerPrediction.Total = predictions.Sum(x=>x.PointsEarned ?? 0);
-                foreach (var prediction in predictions.Where(x=>x.AspNetUserId != userGuid))
+                foreach (var prediction in predictions)
                 {
-                    if (prediction.Matchup.GameTime > DateTime.Now.AddMinutes(result.Tournament.MatchupClosingTime))
+                    if (prediction.Matchup.GameTime > DateTime.UtcNow.AddHours(3).AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
                     {
-                        prediction.EnemyTeamScore = null;
-                        prediction.HomeTeamScore = null;
+                        prediction.EnemyTeamScoreText = GetHiddenScoreText(prediction.EnemyTeamScore);
+                        prediction.HomeTeamScoreText = GetHiddenScoreText(prediction.HomeTeamScore);
+                    }
+                    else
+                    {
+                        prediction.EnemyTeamScoreText = prediction.EnemyTeamScore?.ToString() ?? "-";
+                        prediction.HomeTeamScoreText = prediction.HomeTeamScore?.ToString() ?? "-";
                     }
                 }
+
                 result.PlayerPredictions.Add(playerPrediction);
             }
-
+            result.PlayerPredictions = result.PlayerPredictions.OrderByDescending(x => x.Total).ToList();
             return View(result);
+        }
+
+        private static string GetHiddenScoreText(int? score)
+        {
+            if (score.HasValue)
+            {
+                return "?";
+            }
+            else
+            {
+                return "-";
+            }
         }
 
         public ActionResult Contact()

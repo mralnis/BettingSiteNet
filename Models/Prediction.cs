@@ -12,15 +12,17 @@ namespace BettingSiteNet.Models
         public int Id { get; set; }
         public int MatchupId { get; set; }
         public Guid AspNetUserId { get; set; }
-
-        [DisplayFormat(NullDisplayText = "_")]
         public int? HomeTeamScore { get; set; }
 
-        [DisplayFormat(NullDisplayText = "_")]
         public int? EnemyTeamScore { get; set; }
 
         public int? PointsEarned { get; set; }
         public Matchup Matchup { get; set; }
+
+        [NotMapped]
+        public string EnemyTeamScoreText { get; set; }
+        [NotMapped]
+        public string HomeTeamScoreText { get; set; }
 
     }
 }
