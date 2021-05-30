@@ -11,5 +11,6 @@ namespace BettingSiteNet.Controllers.ViewModels
         public string Name { get; set; }
         public List<Prediction> Predictions { get; set; }
         public int Total { get; set; }
+        public Guid UserId { get; set; }
     }
 }

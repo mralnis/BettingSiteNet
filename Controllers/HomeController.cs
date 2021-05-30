@@ -86,7 +86,7 @@ namespace BettingSiteNet.Controllers
             }
             var allCountries = db.Countries.ToList();
             var cc = allCountries.Last();
-            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList().OrderByDescending(x => x.ApsnetUserId == userGuid);
+            var players = db.PlayerTournaments.Where(x => x.TournamentId == id).ToList();
             result.PlayerPredictions = new List<PlayerPredictions>();
             foreach (var player in players)
             {
@@ -95,6 +95,7 @@ namespace BettingSiteNet.Controllers
                 var predictions = db.Predictions.Include(t => t.Matchup).Include(t => t.Matchup.Country).Where(x => x.AspNetUserId == player.ApsnetUserId).OrderBy(x => x.Matchup.GameTime).ToList();
                 playerPrediction.Predictions = predictions;
                 playerPrediction.Total = predictions.Sum(x=>x.PointsEarned ?? 0);
+                playerPrediction.UserId = player.ApsnetUserId;
                 foreach (var prediction in predictions)
                 {
                     if (prediction.Matchup.GameTime > DateTime.UtcNow.AddHours(3).AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
@@ -111,7 +112,7 @@ namespace BettingSiteNet.Controllers
 
                 result.PlayerPredictions.Add(playerPrediction);
             }
-            result.PlayerPredictions = result.PlayerPredictions.OrderByDescending(x => x.Total).ToList();
+            result.PlayerPredictions = result.PlayerPredictions.OrderByDescending(x=>x.UserId == userGuid).ThenByDescending(x => x.Total).ToList();
             return View(result);
         }
 
