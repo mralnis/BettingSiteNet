@@ -76,10 +76,10 @@ namespace BettingSiteNet.Controllers
                 }
                 db.SaveChanges();
             }
-            
+
             foreach (var matchup in result.Tournament.Matchups)
             {
-                if (matchup.GameTime > DateTime.UtcNow.AddHours(2).AddMinutes(result.Tournament.MatchupClosingTime))
+                if (matchup.GameTime > EasternEuropeanTime.AddMinutes(result.Tournament.MatchupClosingTime))
                 {
                     matchup.CanVote = true;
                 }
@@ -94,11 +94,11 @@ namespace BettingSiteNet.Controllers
                 playerPrediction.Name = db.Users.Find(player.ApsnetUserId.ToString()).UserName;
                 var predictions = db.Predictions.Include(t => t.Matchup).Include(t => t.Matchup.Country).Where(x => x.AspNetUserId == player.ApsnetUserId).OrderBy(x => x.Matchup.GameTime).ToList();
                 playerPrediction.Predictions = predictions;
-                playerPrediction.Total = predictions.Sum(x=>x.PointsEarned ?? 0);
+                playerPrediction.Total = predictions.Sum(x => x.PointsEarned ?? 0);
                 playerPrediction.UserId = player.ApsnetUserId;
                 foreach (var prediction in predictions)
                 {
-                    if (prediction.Matchup.GameTime > DateTime.UtcNow.AddHours(2).AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
+                    if (prediction.Matchup.GameTime > EasternEuropeanTime.AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
                     {
                         prediction.EnemyTeamScoreText = GetHiddenScoreText(prediction.EnemyTeamScore);
                         prediction.HomeTeamScoreText = GetHiddenScoreText(prediction.HomeTeamScore);
@@ -112,8 +112,17 @@ namespace BettingSiteNet.Controllers
 
                 result.PlayerPredictions.Add(playerPrediction);
             }
-            result.PlayerPredictions = result.PlayerPredictions.OrderByDescending(x=>x.UserId == userGuid).ThenByDescending(x => x.Total).ToList();
+            result.PlayerPredictions = result.PlayerPredictions.OrderByDescending(x => x.UserId == userGuid).ThenByDescending(x => x.Total).ToList();
             return View(result);
+        }
+
+        private static DateTime EasternEuropeanTime
+        {
+            get
+            {
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time"));
+
+            }
         }
 
         private static string GetHiddenScoreText(int? score)

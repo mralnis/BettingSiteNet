@@ -34,7 +34,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Hockey Pool by Bocmanis. System time: @DateTime.Now.ToLongTimeString()</p>
+            <p>&copy; @DateTime.Now.Year - Hockey Pool by Bocmanis. Sistēmas laiks: @DateTime.Now.ToLongTimeString() Latvijas laiks: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time")).ToLongTimeString()</p>
         </footer>
     </div>
 
