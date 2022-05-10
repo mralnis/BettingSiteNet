@@ -9,6 +9,10 @@ namespace BettingSiteNet.Migrations
         {
             AddColumn("dbo.Tournaments", "IsActive", c => c.Boolean(nullable: false));
             DropColumn("dbo.Tournaments", "TieAllowed");
+
+            
+
+
         }
         
         public override void Down()

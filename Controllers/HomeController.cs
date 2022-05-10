@@ -79,7 +79,7 @@ namespace BettingSiteNet.Controllers
             
             foreach (var matchup in result.Tournament.Matchups)
             {
-                if (matchup.GameTime > DateTime.UtcNow.AddHours(3).AddMinutes(result.Tournament.MatchupClosingTime))
+                if (matchup.GameTime > DateTime.UtcNow.AddHours(2).AddMinutes(result.Tournament.MatchupClosingTime))
                 {
                     matchup.CanVote = true;
                 }
@@ -98,7 +98,7 @@ namespace BettingSiteNet.Controllers
                 playerPrediction.UserId = player.ApsnetUserId;
                 foreach (var prediction in predictions)
                 {
-                    if (prediction.Matchup.GameTime > DateTime.UtcNow.AddHours(3).AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
+                    if (prediction.Matchup.GameTime > DateTime.UtcNow.AddHours(2).AddMinutes(result.Tournament.MatchupClosingTime) && prediction.AspNetUserId != userGuid)
                     {
                         prediction.EnemyTeamScoreText = GetHiddenScoreText(prediction.EnemyTeamScore);
                         prediction.HomeTeamScoreText = GetHiddenScoreText(prediction.HomeTeamScore);

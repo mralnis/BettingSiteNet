@@ -75,6 +75,11 @@ button {
     background-color: rgba(204,229,255,0.6) !important;
 }
 
+.firstColumn {
+    background-color: rgba(255,255,255,0.9) !important;
+    padding-left: 4px
+}
+
 .collapsible {
     background-color: #777;
     color: white;
