@@ -1,5 +1,8 @@
-﻿using Microsoft.Owin;
+﻿using BettingSiteNet.Migrations;
+using BettingSiteNet.Models;
+using Microsoft.Owin;
 using Owin;
+using System.Data.Entity.Migrations;
 
 [assembly: OwinStartupAttribute(typeof(BettingSiteNet.Startup))]
 namespace BettingSiteNet
@@ -9,6 +12,13 @@ namespace BettingSiteNet
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            var context = new ApplicationDbContext();
+            //context.Database.Delete();
+            context.Database.CreateIfNotExists();
+
+            var migrator = new DbMigrator(new Configuration());
+            migrator.Update();
         }
     }
 }
