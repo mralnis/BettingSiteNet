@@ -14,8 +14,7 @@ namespace BettingSiteNet
             ConfigureAuth(app);
 
             var context = new ApplicationDbContext();
-            context.Database.Delete();
-            context.Database.Create();
+            context.Database.CreateIfNotExists();
 
             var migrator = new DbMigrator(new Configuration());
             migrator.Update();
